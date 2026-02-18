@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="proxyManager/proxyManager.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
+  <Project Path="tun2socksBind/tun2socksBind.csproj" Id="5402db4e-d5e3-4fbc-adf1-ad6e5cd99a17" />
+</Solution>
