@@ -2,7 +2,10 @@
 
 public interface IVpnService
 {
-    void StartVpn();
-    void StopVpn();
+    Task<bool> PrepareVPN();
+    void StartVPN();
+    void StopVPN();
+
     bool IsRunning { get; }
+    bool IsSetup { get; }
 }

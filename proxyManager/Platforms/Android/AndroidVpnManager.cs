@@ -1,60 +1,80 @@
 ﻿using Android.Content;
+using Android.App;
 using Android.Net;
 using Android.OS;
 using Newtonsoft.Json;
-using proxyManager.Services.Interfaces;
 using proxyManager.Platforms.Android.AndroidServices;
+using proxyManager.Exceptions;
 
 namespace proxyManager.Platforms.Android
 {
-    public class AndroidVpnManager : IVpnService
+    public static class AndroidVpnManager
     {
-        public bool IsRunning => _isRunning;
+        public const int VPN_PERMISSION_REQUEST_CODE = 1001;
 
-        private bool _isRunning = false;
-        private static Config _config;
+        public static bool IsRunning { get; private set; } = false;
+        public static bool IsSetup { get; private set; } = false;
 
-        public AndroidVpnManager(Config config)
+        private static Context AppContext => Platform.AppContext;
+
+        // Возвращает True если подготовка успешна (разрешения есть)
+        public static Task<bool> PrepareVPN()
         {
-            _config = config;
-        }
+            var activity = Platform.CurrentActivity!;
+            var intentPrepare = VpnService.Prepare(activity);
 
-        public void StartVpn()
-        {
-            var acvtivity = Platform.CurrentActivity!;
-            var intentPrepare = VpnService.Prepare(acvtivity);
-            if (intentPrepare != null)
+            var tcs = new TaskCompletionSource<bool>();
+
+            if (intentPrepare is null)
             {
-                acvtivity.StartActivityForResult(intentPrepare, 0);
+                // Разрешения уже есть - таск завершен
+                IsSetup = true;
+                tcs.SetResult(true);
+                return tcs.Task;
             }
-            else
+
+            // Запрашиваем разрешения
+            activity.StartActivityForResult(intentPrepare, VPN_PERMISSION_REQUEST_CODE);
+
+            MainActivity.VpnPermissionGiven += (s, args) =>
             {
-                InternalStart();
-            }
+                bool isOk = args == Result.Ok;
+                IsSetup = isOk;
+                tcs.SetResult(isOk);
+            };
 
-            _isRunning = true;
+            return tcs.Task;
         }
 
-        public void StopVpn()
+        public static void StartVPN(Config config)
         {
-            var context = Platform.AppContext!;
-            var intent = new Intent(context, typeof(MainVpnService))!;
-            context.StopService(intent);
-            _isRunning = false;
-        }
+            if (IsRunning)
+                throw new VpnIsAlreadyRunningException();
+            if (!IsSetup)
+                throw new VpnIsNotSetupException();
 
-        public static void InternalStart()
-        {
-            string json = JsonConvert.SerializeObject(_config);
+            string configJson = JsonConvert.SerializeObject(config);
 
-            var context = Platform.AppContext!;
-            var intent = new Intent(context, typeof(MainVpnService))!;
-            intent.PutExtra("config", json);
+            Intent intent = new Intent(AppContext, typeof(MainVpnService));
+            intent.PutExtra("config", configJson);
 
             if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
-                context.StartForegroundService(intent);
+                AppContext.StartForegroundService(intent);
             else
-                context.StartService(intent);
+                AppContext.StartService(intent);
+
+            IsRunning = true;
+        }
+
+        public static void StopVPN()
+        {
+            if (!IsRunning)
+                throw new VpnIsNotRunningException();
+
+            var intent = new Intent(AppContext, typeof(MainVpnService))!;
+            AppContext.StopService(intent);
+
+            IsRunning = false;
         }
     }
 }

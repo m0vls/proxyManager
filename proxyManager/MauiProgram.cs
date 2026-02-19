@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using proxyManager.Platforms.Android;
+using proxyManager.Services.Implementations;
 using proxyManager.Services.Interfaces;
 
 namespace proxyManager
@@ -14,7 +15,7 @@ namespace proxyManager
         // Добавляем сервисы в DI контейнер
         private static void AddServices(MauiAppBuilder builder)
         {
-            builder.Services.AddSingleton<IVpnService, AndroidVpnManager>();
+            builder.Services.AddSingleton<IVpnService, AndroidVpnService>();
         }
         // Добавляем ViewModels в DI контейнер
         private static void AddViewModels(MauiAppBuilder builder)

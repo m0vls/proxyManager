@@ -49,6 +49,8 @@ public static class SocksProxyManager
     {
         if (IsRunning)
             throw new ProxyIsAlreadyRunningException();
+        if (!IsSetup)
+            throw new ProxyIsNotSetupException();
 
         StartEngine();
     }

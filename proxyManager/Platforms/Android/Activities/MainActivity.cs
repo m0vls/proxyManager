@@ -13,13 +13,15 @@ namespace proxyManager;
     ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
 public class MainActivity : MauiAppCompatActivity
 {
+    public static event EventHandler<Result>? VpnPermissionGiven;
+
     public override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent? data, ComponentCaller caller)
     {
         base.OnActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 1 && resultCode == Result.Ok)
+        if (requestCode == AndroidVpnManager.VPN_PERMISSION_REQUEST_CODE)
         {
-            AndroidVpnManager.InternalStart();
+            VpnPermissionGiven?.Invoke(this, resultCode);
         }
     }
 }

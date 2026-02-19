@@ -2,12 +2,11 @@
 using Android.Content;
 using Android.Net;
 using Android.OS;
-using Com.Tun2socks.Engine;
 using Newtonsoft.Json;
 using System.Net;
-using proxyManager.Exceptions;
 using proxyManager.Platforms.Android.Notifications;
 using proxyManager.Platforms.Android.Proxy;
+using proxyManager.Exceptions;
 
 namespace proxyManager.Platforms.Android.AndroidServices;
 

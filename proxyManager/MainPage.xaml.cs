@@ -17,9 +17,9 @@ namespace proxyManager
         private void OnCounterClicked(object? sender, EventArgs e)
         {
             if (_androidVpnManager.IsRunning)
-                _androidVpnManager.StopVpn();
+                _androidVpnManager.StopVPN();
             else
-                _androidVpnManager.StartVpn();
+                _androidVpnManager.StartVPN();
         }
 
         public async Task CheckNotificationPermission()
