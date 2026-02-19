@@ -1,10 +1,9 @@
-﻿using Android.App;
-using Android.Content;
+﻿using Android.Content;
 using Android.Net;
 using Android.OS;
-using AndroidX.Core.Content;
 using Newtonsoft.Json;
-using proxyManager.Interfaces;
+using proxyManager.Services.Interfaces;
+using proxyManager.Platforms.Android.AndroidServices;
 
 namespace proxyManager.Platforms.Android
 {
@@ -30,24 +29,10 @@ namespace proxyManager.Platforms.Android
             }
             else
             {
-                InteranlStart();
+                InternalStart();
             }
 
             _isRunning = true;
-        }
-
-        public static void InteranlStart()
-        {
-            string json = JsonConvert.SerializeObject(_config);
-            
-            var context = Platform.AppContext!;
-            var intent = new Intent(context, typeof(MainVpnService))!;
-            intent.PutExtra("config", json);
-
-            if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
-                context.StartForegroundService(intent);
-            else
-                context.StartService(intent);
         }
 
         public void StopVpn()
@@ -58,5 +43,18 @@ namespace proxyManager.Platforms.Android
             _isRunning = false;
         }
 
+        public static void InternalStart()
+        {
+            string json = JsonConvert.SerializeObject(_config);
+
+            var context = Platform.AppContext!;
+            var intent = new Intent(context, typeof(MainVpnService))!;
+            intent.PutExtra("config", json);
+
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
+                context.StartForegroundService(intent);
+            else
+                context.StartService(intent);
+        }
     }
 }
