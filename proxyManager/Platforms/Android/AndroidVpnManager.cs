@@ -13,7 +13,7 @@ namespace proxyManager.Platforms.Android
         public const int VPN_PERMISSION_REQUEST_CODE = 1001;
 
         public static bool IsRunning { get; private set; } = false;
-        public static bool IsSetup { get; private set; } = false;
+        public static bool IsPrepared { get; private set; } = false;
 
         private static Context AppContext => Platform.AppContext;
 
@@ -28,7 +28,7 @@ namespace proxyManager.Platforms.Android
             if (intentPrepare is null)
             {
                 // Разрешения уже есть - таск завершен
-                IsSetup = true;
+                IsPrepared = true;
                 tcs.SetResult(true);
                 return tcs.Task;
             }
@@ -39,7 +39,7 @@ namespace proxyManager.Platforms.Android
             MainActivity.VpnPermissionGiven += (s, args) =>
             {
                 bool isOk = args == Result.Ok;
-                IsSetup = isOk;
+                IsPrepared = isOk;
                 tcs.SetResult(isOk);
             };
 
@@ -50,7 +50,7 @@ namespace proxyManager.Platforms.Android
         {
             if (IsRunning)
                 throw new VpnIsAlreadyRunningException();
-            if (!IsSetup)
+            if (!IsPrepared)
                 throw new VpnIsNotSetupException();
 
             string configJson = JsonConvert.SerializeObject(config);

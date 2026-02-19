@@ -7,5 +7,5 @@ public interface IVpnService
     void StopVPN();
 
     bool IsRunning { get; }
-    bool IsSetup { get; }
+    bool IsPrepared { get; }
 }

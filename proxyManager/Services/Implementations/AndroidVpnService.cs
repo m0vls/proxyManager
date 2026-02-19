@@ -6,7 +6,7 @@ namespace proxyManager.Services.Implementations;
 public class AndroidVpnService(Config config) : IVpnService
 {
     public bool IsRunning => AndroidVpnManager.IsRunning;
-    public bool IsSetup => AndroidVpnManager.IsSetup;
+    public bool IsPrepared => AndroidVpnManager.IsPrepared;
 
     public async Task<bool> PrepareVPN() => await AndroidVpnManager.PrepareVPN();
 

@@ -4,34 +4,29 @@ namespace proxyManager
 {
     public partial class MainPage : ContentPage
     {
-        private IVpnService _androidVpnManager;
+        protected IVpnService androidVpnManager;
+        protected IPermissionRequester permissionRequester;
 
-        public MainPage(IVpnService androidVpnManager)
+        public MainPage(IVpnService androidVpnManager, IPermissionRequester permissionRequester)
         {
             InitializeComponent();
-            _androidVpnManager = androidVpnManager;
 
-            CheckNotificationPermission();
+            this.androidVpnManager = androidVpnManager;
+            this.permissionRequester = permissionRequester;
+
+            permissionRequester.RequesterRequiredPermissions().Start();
         }
 
         private void OnCounterClicked(object? sender, EventArgs e)
         {
-            if (_androidVpnManager.IsRunning)
-                _androidVpnManager.StopVPN();
+            if (!androidVpnManager.IsPrepared)
+                androidVpnManager.PrepareVPN();
+
+            if (!androidVpnManager.IsRunning)
+                androidVpnManager.StartVPN();
             else
-                _androidVpnManager.StartVPN();
+                androidVpnManager.StopVPN();
         }
 
-        public async Task CheckNotificationPermission()
-        {
-            if (OperatingSystem.IsAndroidVersionAtLeast(33))
-            {
-                var status = await Permissions.CheckStatusAsync<Permissions.PostNotifications>();
-                if (status != PermissionStatus.Granted)
-                {
-                    await Permissions.RequestAsync<Permissions.PostNotifications>();
-                }
-            }
-        }
     }
 }
