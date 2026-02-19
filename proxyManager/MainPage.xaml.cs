@@ -14,13 +14,18 @@ namespace proxyManager
             this.androidVpnManager = androidVpnManager;
             this.permissionRequester = permissionRequester;
 
-            permissionRequester.RequesterRequiredPermissions().RunSynchronously();
+        }
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+
+            await permissionRequester.RequesterRequiredPermissions();
         }
 
-        private void OnCounterClicked(object? sender, EventArgs e)
+        private async void OnCounterClicked(object? sender, EventArgs e)
         {
             if (!androidVpnManager.IsPrepared)
-                androidVpnManager.PrepareVPN();
+                await androidVpnManager.PrepareVPN();
 
             if (!androidVpnManager.IsRunning)
                 androidVpnManager.StartVPN();

@@ -58,19 +58,18 @@ public class MainVpnService : VpnService
     }
 
 
+
     public override void OnDestroy()
     {
-        base.OnDestroy();
-
         if (SocksProxyManager.IsRunning)
             SocksProxyManager.StopProxy();
 
-        if (tunInterface != null)
-        {
-            tunInterface.Close();
-            tunInterface = null;
-        }
+        tunInterface?.Close();
+        tunInterface = null;
 
         StopForeground(StopForegroundFlags.Remove);
+        StopSelf();
+
+        base.OnDestroy();
     }
 }

@@ -14,6 +14,7 @@ namespace proxyManager.Platforms.Android
 
         public static bool IsRunning { get; private set; } = false;
         public static bool IsPrepared { get; private set; } = false;
+        private static Intent vpnServiceIntent = null!;
 
         private static Context AppContext => Platform.AppContext;
 
@@ -55,13 +56,13 @@ namespace proxyManager.Platforms.Android
 
             string configJson = JsonConvert.SerializeObject(config);
 
-            Intent intent = new Intent(AppContext, typeof(MainVpnService));
-            intent.PutExtra("config", configJson);
+            vpnServiceIntent = new Intent(AppContext, typeof(MainVpnService));
+            vpnServiceIntent .PutExtra("config", configJson);
 
             if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
-                AppContext.StartForegroundService(intent);
+                AppContext.StartForegroundService(vpnServiceIntent);
             else
-                AppContext.StartService(intent);
+                AppContext.StartService(vpnServiceIntent);
 
             IsRunning = true;
         }
@@ -71,8 +72,7 @@ namespace proxyManager.Platforms.Android
             if (!IsRunning)
                 throw new VpnIsNotRunningException();
 
-            var intent = new Intent(AppContext, typeof(MainVpnService))!;
-            AppContext.StopService(intent);
+            bool a = AppContext.StopService(vpnServiceIntent);
 
             IsRunning = false;
         }
