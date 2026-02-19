@@ -1,5 +1,4 @@
-﻿using proxyManager.Interfaces;
-using proxyManager.Platforms.Android;
+﻿using proxyManager.Services.Interfaces;
 
 namespace proxyManager
 {

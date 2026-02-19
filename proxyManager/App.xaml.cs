@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace proxyManager
+﻿namespace proxyManager
 {
     public partial class App : Application
     {
