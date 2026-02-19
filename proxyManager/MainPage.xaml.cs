@@ -14,7 +14,7 @@ namespace proxyManager
             this.androidVpnManager = androidVpnManager;
             this.permissionRequester = permissionRequester;
 
-            permissionRequester.RequesterRequiredPermissions().Start();
+            permissionRequester.RequesterRequiredPermissions().RunSynchronously();
         }
 
         private void OnCounterClicked(object? sender, EventArgs e)

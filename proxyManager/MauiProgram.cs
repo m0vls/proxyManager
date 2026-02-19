@@ -72,6 +72,8 @@ namespace proxyManager
             AddDebug(builder);
 #endif
 
+            ApplyGlobalApplicationExceptionsHandling();
+
             return builder.Build();
         }
 
