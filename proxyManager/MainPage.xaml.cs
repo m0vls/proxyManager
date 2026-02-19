@@ -5,9 +5,9 @@ namespace proxyManager
     public partial class MainPage : ContentPage
     {
         protected IVpnService androidVpnManager;
-        protected IPermissionRequester permissionRequester;
+        protected IPermissionRequesterService permissionRequester;
 
-        public MainPage(IVpnService androidVpnManager, IPermissionRequester permissionRequester)
+        public MainPage(IVpnService androidVpnManager, IPermissionRequesterService permissionRequester)
         {
             InitializeComponent();
 

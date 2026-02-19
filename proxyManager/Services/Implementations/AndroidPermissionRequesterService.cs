@@ -1,6 +1,6 @@
 using proxyManager.Services.Interfaces;
 
-public class AndroidPermissionRequester : IPermissionRequester
+public class AndroidPermissionRequesterService : IPermissionRequesterService
 {
     protected static async Task CheckNotificationPermission()
     {

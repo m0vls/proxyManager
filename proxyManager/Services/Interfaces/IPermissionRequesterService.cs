@@ -1,7 +1,7 @@
 
 namespace proxyManager.Services.Interfaces;
 
-public interface IPermissionRequester
+public interface IPermissionRequesterService
 {
     Task RequesterRequiredPermissions();
 }

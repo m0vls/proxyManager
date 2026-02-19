@@ -16,6 +16,7 @@ namespace proxyManager
         private static void AddServices(MauiAppBuilder builder)
         {
             builder.Services.AddSingleton<IVpnService, AndroidVpnService>();
+            builder.Services.AddSingleton<IPermissionRequesterService, AndroidPermissionRequesterService>();
         }
         // Добавляем ViewModels в DI контейнер
         private static void AddViewModels(MauiAppBuilder builder)
